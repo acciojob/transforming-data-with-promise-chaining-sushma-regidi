@@ -1,49 +1,71 @@
-//your JS code here. If required.
 document.getElementById("btn").onclick = function () {
   const input = document.getElementById("ip").value;
   const outputDiv = document.getElementById("output");
+
+  // Clear any previous output
+  outputDiv.innerHTML = "";
+
+  // Convert input to number
   const num = Number(input);
 
-  // Clear previous output
-  outputDiv.textContent = "";
-
-  // Helper function to create a delayed promise
-  function delayTransform(fn, time, label) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const result = fn();
-        outputDiv.textContent = label + result;
-        resolve(result);
-      }, time);
-    });
+  // Check for valid input
+  if (isNaN(num)) {
+    outputDiv.innerHTML = "Please enter a valid number!";
+    return;
   }
 
-  // Start promise chain
-  new Promise((resolve) => {
-    // First promise (after 2s): display the number
+  // Promise 1: resolve input number after 2 seconds
+  const p1 = new Promise((resolve) => {
     setTimeout(() => {
-      outputDiv.textContent = `Result: ${num}`;
+      outputDiv.innerHTML = `Result: ${num}`;
       resolve(num);
     }, 2000);
+  });
+
+  // Chain Promises
+  p1.then((res1) => {
+    // Promise 2: multiply by 2
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const result = res1 * 2;
+        outputDiv.innerHTML = `Result: ${result}`;
+        resolve(result);
+      }, 2000);
+    });
   })
-    // Multiply by 2 after 2s
-    .then((res) => {
-      return delayTransform(() => res * 2, 2000, "Result: ");
+    .then((res2) => {
+      // Promise 3: subtract 3
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const result = res2 - 3;
+          outputDiv.innerHTML = `Result: ${result}`;
+          resolve(result);
+        }, 1000);
+      });
     })
-    // Subtract 3 after 1s
-    .then((res) => {
-      return delayTransform(() => res - 3, 1000, "Result: ");
+    .then((res3) => {
+      // Promise 4: divide by 2
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const result = res3 / 2;
+          outputDiv.innerHTML = `Result: ${result}`;
+          resolve(result);
+        }, 1000);
+      });
     })
-    // Divide by 2 after 1s
-    .then((res) => {
-      return delayTransform(() => res / 2, 1000, "Result: ");
-    })
-    // Add 10 after 1s
-    .then((res) => {
-      return delayTransform(() => res + 10, 1000, "Final Result: ");
+    .then((res4) => {
+      // Promise 5: add 10
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const finalResult = res4 + 10;
+          outputDiv.innerHTML = `Final Result: ${finalResult}`;
+          resolve(finalResult);
+        }, 1000);
+      });
     })
     .catch((err) => {
-      outputDiv.textContent = "Error: " + err;
+      outputDiv.innerHTML = "Error: " + err;
     });
 };
+
 
